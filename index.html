@@ -1,0 +1,113 @@
+<html ng-app="countryApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Angular.js JSON Fetching Example</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script>
+      var countryApp = angular.module('countryApp', []);
+      countryApp.controller('CountryCtrl', function ($scope, $http){
+        $http.get('http://sneakpeeq-sites.s3.amazonaws.com/interviews/ce/feeds/store.js').success(function(data) {
+          $scope.products = data.products;
+        });
+           $scope.greaterThan = function(prop, val){
+                return function(item){
+                    return item[prop] > val;
+                    }
+           }
+           
+          $scope.priceFilter = false;
+          $scope.nameSort = false;
+          $scope.priceSort = false;
+          $scope.check=function(){
+              if($scope.priceFilter ===false){
+                    return false;
+                    }
+                return true;
+         };
+          
+          $scope.name=function(){
+              if($scope.nameSort ===false){
+                    return false;
+                    }
+                return true;
+         };
+          
+          $scope.price=function(){
+              if($scope.priceSort ===false){
+                    return false;
+                    }
+                return true;
+         };
+          
+      });
+        
+   
+
+    </script>
+  </head>
+  <body ng-controller="CountryCtrl">
+	<h2>Angular.js JSON Fetching Example</h2>
+      <input type="checkbox" ng-model="priceFilter"> Apply price filter!
+      <input type="checkbox" ng-model="nameSort"> By Name!
+      <input type="checkbox" ng-model="priceSort">By Price!
+
+      
+    <ul class="products">
+  
+    
+    <li ng-if="check() && price() && !name()" ng-repeat="product in products | filter: greaterThan('defaultPriceInCents', 3000) | orderBy:'-defaultPriceInCents' ">
+        
+            <img ng-src="{{product.mainImage.ref}}" />
+            <h4>{{product.name}})</h4>
+            <p>Price : {{product.defaultPriceInCents | currency}}</p>
+        
+    </li>
+        
+     <li ng-if="check() && !price() && name()" ng-repeat="product in products | filter: greaterThan('defaultPriceInCents', 3000) | orderBy:'name' ">
+        
+            <img ng-src="{{product.mainImage.ref}}" />
+            <h4>{{product.name}})</h4>
+            <p>Price : {{product.defaultPriceInCents | currency}}</p>
+        
+    </li>
+        
+ 
+    
+          <li ng-if="check() && !price() && !name()" ng-repeat="product in products | filter: greaterThan('defaultPriceInCents', 3000)  ">
+        
+            <img ng-src="{{product.mainImage.ref}}" />
+            <h4>{{product.name}})</h4>
+            <p>Price : {{product.defaultPriceInCents | currency}}</p>
+        
+    </li>
+    
+        <li ng-if="!check() && price() && !name()" ng-repeat="product in products  | orderBy:'defaultPriceInCents' ">
+            <img ng-src="{{product.mainImage.ref}}" />
+            <h4>{{product.name}})</h4>
+            <p>Price : {{product.defaultPriceInCents | currency}}</p>
+        
+    </li>
+        
+         <li ng-if="!check() && !price() && name()" ng-repeat="product in products  | orderBy:'defaultPriceInCents' ">
+            <img ng-src="{{product.mainImage.ref}}" />
+            <h4>{{product.name}})</h4>
+            <p>Price : {{product.defaultPriceInCents | currency}}</p>
+        
+    </li>
+        
+    
+        <li ng-if="!check() && !price() && !name()" ng-repeat="product in products ">
+        
+            <img ng-src="{{product.mainImage.ref}}" />
+            <h4>{{product.name}})</h4>
+            <p>Price : {{product.defaultPriceInCents | currency}}</p>
+        
+    </li>
+    
+  
+    
+</ul>
+
+  </body>
+</html>
